@@ -24,6 +24,11 @@ const theme = {
     normal: "400",
     bold: "700",
   },
+  fontAlignments: {
+    left: "left",
+    center: "center",
+    right: "right",
+  },
   imgSizes: {
     normalWidth: 50,
     normalHeight: 50,

@@ -2,14 +2,51 @@ import { FlatList, View, StyleSheet } from "react-native";
 
 import Item from "./Item";
 import theme from "../../theme";
+import Text from "../Text";
+import useRepositories from "../../hooks/useRepositories";
 
 const styles = StyleSheet.create({
   separator: {
     height: theme.spacing.medium,
   },
+  loadingContainer: {
+    padding: theme.spacing.large,
+  },
 });
 
-const repositories = [
+const ItemSeparator = () => <View style={styles.separator} />;
+
+const RepositoryList = () => {
+  const { repositories, loading } = useRepositories();
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text textAlign="center" fontWeight="bold" fontSize="subheading">
+          Loading...
+        </Text>
+      </View>
+    );
+  }
+
+  const repositoriesNodes = repositories
+    ? repositories.edges.map((edge) => edge.node)
+    : [];
+
+  return (
+    <FlatList
+      data={repositoriesNodes}
+      ItemSeparatorComponent={ItemSeparator}
+      renderItem={({ item }) => <Item repository={item} />}
+      keyExtractor={(item) => item.id}
+    />
+  );
+};
+
+export default RepositoryList;
+
+/* 
+const repositoriesData = [
   {
     id: "jaredpalmer.formik",
     fullName: "jaredpalmer/formik",
@@ -55,18 +92,4 @@ const repositories = [
     ownerAvatarUrl: "https://avatars3.githubusercontent.com/u/13142323?v=4",
   },
 ];
-
-const ItemSeparator = () => <View style={styles.separator} />;
-
-const RepositoryList = () => {
-  return (
-    <FlatList
-      data={repositories}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <Item repository={item} />}
-      keyExtractor={(item) => item.id}
-    />
-  );
-};
-
-export default RepositoryList;
+*/
